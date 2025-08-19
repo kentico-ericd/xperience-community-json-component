@@ -4,6 +4,7 @@ import {
     Button,
     ButtonColor,
     ButtonSize,
+    FormEditMode,
     FormItemWrapper,
     Headline,
     HeadlineSize,
@@ -92,7 +93,7 @@ export const JsonFormComponent = (props: JsonFormComponentClientProperties) => {
             }
 
             const inputElements = props.inputs.map(i =>
-                <JsonInputElement disabled={props.disabled} input={i} editedObject={o} onUpdate={save} />);
+                <JsonInputElement editMode={props.editMode ?? FormEditMode.Default} input={i} editedObject={o} onUpdate={save} />);
             const containerContent = insertBetween(<br />, inputElements);
             // Add header to beginning of content
             containerContent.unshift(getContainerHeader(index));
@@ -111,7 +112,7 @@ export const JsonFormComponent = (props: JsonFormComponentClientProperties) => {
             title='Delete'
             borderless={true}
             size={ButtonSize.S}
-            disabled={props.disabled}
+            disabled={props.editMode === FormEditMode.Disabled}
             color={ButtonColor.Quinary}
             onClick={() => deleteObject(index)} />
 
@@ -137,6 +138,7 @@ export const JsonFormComponent = (props: JsonFormComponentClientProperties) => {
             invalid={true}
             validationMessage={props.errorMessage}
             children={null}
+            editMode={props.editMode}
             markAsRequired={props.required}
             labelIcon={props.tooltip ? 'xp-i-circle' : undefined}
             labelIconTooltip={props.tooltip} />
@@ -147,6 +149,7 @@ export const JsonFormComponent = (props: JsonFormComponentClientProperties) => {
         label={props.label}
         explanationText={props.explanationText}
         invalid={props.invalid}
+        editMode={props.editMode}
         validationMessage={props.validationMessage}
         markAsRequired={props.required}
         labelIcon={props.tooltip ? 'xp-i-circle' : undefined}
@@ -158,7 +161,7 @@ export const JsonFormComponent = (props: JsonFormComponentClientProperties) => {
             label='New'
             icon='xp-plus'
             title='Add new item'
-            disabled={props.disabled}
+            disabled={props.editMode === FormEditMode.Disabled}
             onClick={insertObject} />
     </FormItemWrapper>
 };

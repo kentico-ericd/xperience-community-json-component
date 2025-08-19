@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import {
     Checkbox,
+    FormEditMode,
     Input,
     MenuItem,
     RadioButton,
@@ -26,8 +27,8 @@ interface JsonInputElementProperties {
     editedObject: any
     /** A function called when the value of the underlying property changes. */
     onUpdate: () => void
-    /** If true, the input(s) should be disabled */
-    disabled: boolean | undefined
+    /** The input edit mode. */
+    editMode: FormEditMode
 }
 
 /**
@@ -52,7 +53,10 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
         return options?.map(o => {
             const optionSplit = o.split(';');
 
-            return <MenuItem primaryLabel={optionSplit[1]} value={optionSplit[0]} />
+            return <MenuItem
+                disabled={props.editMode === FormEditMode.Disabled}
+                primaryLabel={optionSplit[1]}
+                value={optionSplit[0]} />
         });
     };
 
@@ -64,7 +68,12 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
         return options?.map(o => {
             const optionSplit = o.split(';');
 
-            return <RadioButton disabled={props.disabled} value={optionSplit[0]}>{optionSplit[1]}</RadioButton>
+            return <RadioButton
+                disabled={props.editMode === FormEditMode.Disabled}
+                readOnly={props.editMode === FormEditMode.ReadOnly}
+                value={optionSplit[0]}>
+                {optionSplit[1]}
+            </RadioButton>
         });
     };
 
@@ -80,7 +89,8 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
             return <Checkbox
                 label={optionSplit[1]}
                 checked={currentValues.includes(optionSplit[0])}
-                disabled={props.disabled}
+                disabled={props.editMode === FormEditMode.Disabled}
+                readOnly={props.editMode === FormEditMode.ReadOnly}
                 onChange={(_, checked) => {
                     const newValue = updateMultipleChoiceValue(currentValues, optionSplit[0], checked);
                     updateEditedObject(newValue);
@@ -117,7 +127,8 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
                 value={propertyValue}
                 label={props.input.label}
                 name={identifier + '-' + props.input.propertyName}
-                disabled={props.disabled}
+                readOnly={props.editMode === FormEditMode.ReadOnly}
+                disabled={props.editMode === FormEditMode.Disabled}
                 onChange={(val) => updateEditedObject(val)}>
                 {getRadioGroupOptions()}
             </RadioGroup>
@@ -125,7 +136,8 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
             return <div><Checkbox
                 label={props.input.label}
                 checked={propertyValue}
-                disabled={props.disabled}
+                disabled={props.editMode === FormEditMode.Disabled}
+                readOnly={props.editMode === FormEditMode.ReadOnly}
                 onChange={(_, checked) => updateEditedObject(checked)} /></div>
         case JsonInputType.Dropdown:
             return <Select
@@ -133,7 +145,8 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
                 label={props.input.label}
                 clearable={true}
                 clearButtonTooltip='Clear'
-                disabled={props.disabled}
+                disabled={props.editMode === FormEditMode.Disabled}
+                readOnly={props.editMode === FormEditMode.ReadOnly}
                 onChange={(val) => updateEditedObject(val)}>
                 {getDropdownOptions()}
             </Select>
@@ -142,7 +155,8 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
                 type='number'
                 label={props.input.label}
                 value={propertyValue}
-                disabled={props.disabled}
+                disabled={props.editMode === FormEditMode.Disabled}
+                readOnly={props.editMode === FormEditMode.ReadOnly}
                 onChange={(e) => updateEditedObject(parseInt(e.target.value))} />
         default:
         case JsonInputType.Text:
@@ -150,7 +164,8 @@ export const JsonInputElement = (props: JsonInputElementProperties): JSX.Element
                 type='text'
                 label={props.input.label}
                 value={propertyValue}
-                disabled={props.disabled}
+                disabled={props.editMode === FormEditMode.Disabled}
+                readOnly={props.editMode === FormEditMode.ReadOnly}
                 onChange={(e) => updateEditedObject(e.target.value)} />
     }
 }

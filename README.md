@@ -9,9 +9,10 @@ This package adds a new [UI form component](https://docs.kentico.com/developers-
 
 ## Library Version Matrix
 
-| Xperience Version | Library Version |
-| ----------------- | --------------- |
-| >= 29.0.0         | >= 1.0.0        |
+| Xperience Version    | Library Version |
+| -------------------- | --------------- |
+| >= 29.0.0 < 30.0.0   | 1.x.x           |
+| >= 30.5.0            | 2.x.x           |
 
 ## :gear: Package Installation
 
